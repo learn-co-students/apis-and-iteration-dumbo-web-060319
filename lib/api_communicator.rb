@@ -3,7 +3,11 @@ require 'json'
 require 'pry'
 
 def find_character_in_list(response_hash)
-  response_hash["results"][0]
+  if response_hash["count"] == 0
+    return {'films' => []}
+  else
+    response_hash["results"][0]
+  end
 end
 
 def get_films_from_hash(character_hash)
@@ -26,8 +30,8 @@ def get_character_movies_from_api(character_name)
   response_hash = JSON.parse(response_string)
 
   character_hash = find_character_in_list(response_hash)
-  films_url_array = get_films_from_hash(character_hash)
 
+  films_url_array = get_films_from_hash(character_hash)
   film_info(films_url_array)
 end
 
@@ -39,8 +43,3 @@ def show_character_movies(character)
   films = get_character_movies_from_api(character)
   print_movies(films)
 end
-
-## BONUS
-
-# that `get_character_movies_from_api` method is probably pretty long. Does it do more than one job?
-# can you split it up into helper methods?
