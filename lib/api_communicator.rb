@@ -10,20 +10,24 @@ def get_character_movies_from_api(character_name)
   #   `character`
   response_string2=RestClient.get("http://www.swapi.co/api/people/?search=#{character_name}")
   parsed = JSON.parse(response_string2)
-  
-  newArr=[]
-  allFilms= parsed["results"][0]["films"]
-  newArr = newArr + allFilms
+  if parsed["count"] == 0
+    return nil
+  else 
 
-  newFinalArr=[]
-  counter = 0 
-  while ( counter < newArr.size)
-    r= RestClient.get(newArr[counter])
-    s= JSON.parse(r)
-    newFinalArr.push(s)
-    counter = counter + 1
+    newArr=[]
+    allFilms= parsed["results"][0]["films"]
+    newArr = newArr + allFilms
+
+    newFinalArr=[]
+    counter = 0 
+    while ( counter < newArr.size)
+      r= RestClient.get(newArr[counter])
+      s= JSON.parse(r)
+      newFinalArr.push(s)
+      counter = counter + 1
+    end 
+    return newFinalArr
   end 
-  return newFinalArr
 
   # collect those film API urls, make a web request to each URL to get the info
   #  for that film
@@ -34,10 +38,15 @@ def get_character_movies_from_api(character_name)
   #  of movies by title. Have a play around with the puts with other info about a given film.
 end
 
-def print_movies(films)
+def print_movies(films=nil)
   # some iteration magic and puts out the movies in a nice list
+  if films == nil
+    puts "Sorry! Not Found!!"
+    return nil
+  end 
   x=films 
   counter = 0
+
   while ( counter < x.length)
     y= films[counter]
     z=y["title"]
